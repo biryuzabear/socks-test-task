@@ -1,6 +1,10 @@
 package com.fedorchenko.socks.entities;
 
 import javax.persistence.*;
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.PositiveOrZero;
 import java.io.Serializable;
 import java.util.Objects;
 
@@ -11,12 +15,16 @@ public class SockEntity {
 
     @Id
     @Column(name = "color")
+    @NotBlank
     private String color;
 
     @Column(name = "cotton_part")
     @Id
+    @Min(0)
+    @Max(100)
     private Integer cottonPart;
 
+    @PositiveOrZero
     @Column(name = "quantity")
     private Integer quantity;
 
@@ -42,10 +50,6 @@ public class SockEntity {
 
     public void setQuantity(Integer quantity) {
         this.quantity = quantity;
-    }
-
-    public boolean hasEmptyFields() {
-        return (quantity == null || color == null || cottonPart == null);
     }
 
 

@@ -3,35 +3,47 @@ package com.fedorchenko.socks.controllers;
 import com.fedorchenko.socks.entities.SockEntity;
 import com.fedorchenko.socks.exceptions.BadParamsException;
 import com.fedorchenko.socks.services.SockService;
-import com.sun.xml.bind.v2.TODO;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+
+import javax.validation.Valid;
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
 
 import java.util.Collections;
 import java.util.List;
 
 @RestController
-@RequestMapping("/")
+@Validated
 public class SockController {
-    @Autowired
+    final
     SockService sockService;
 
-    @GetMapping
-    public List<SockEntity> getSock(@RequestParam String color, @RequestParam Integer cottonPart, @RequestParam String operation){
-        // TODO: Написать логику контроллера с поиском носков
-        return null;
+    public SockController(SockService sockService) {
+        this.sockService = sockService;
     }
 
+    @GetMapping
+    public List<SockEntity> getSock(@RequestParam String color, @RequestParam @Min(0) @Max(100) Integer cottonPart, @RequestParam String operation) throws BadParamsException {
+        switch (operation) {
+            case "equal":
+                return Collections.singletonList(sockService.getSockByColorAndCottonPartEquals(color, cottonPart));
+            case "moreThan":
+                return sockService.getSocksByColorAndCottonPartMoreThan(color, cottonPart);
+            case "lessThan":
+                return sockService.getSocksByColorAndCottonPartLessThan(color, cottonPart);
+            default:
+                throw new BadParamsException("There is no such operation!");
+        }
+    }
 
     @PostMapping("/income")
-    public SockEntity income(@RequestBody SockEntity sockEntity) throws BadParamsException {
-        if(sockEntity.hasEmptyFields()) throw new BadParamsException("Bad params!");
+    public SockEntity income(@RequestBody @Valid SockEntity sockEntity) {
         return sockService.income(sockEntity);
     }
 
     @PostMapping("/outcome")
-    public SockEntity outcome(@RequestBody SockEntity sockEntity) throws BadParamsException {
-        if(sockEntity.hasEmptyFields()) throw new BadParamsException("Bad params!");
+    public SockEntity outcome(@RequestBody @Valid SockEntity sockEntity) throws BadParamsException {
         return sockService.outcome(sockEntity);
     }
 

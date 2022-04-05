@@ -7,6 +7,9 @@ import java.util.List;
 import java.util.Optional;
 
 public interface SockRepo extends JpaRepository<SockEntity, String> {
-    public SockEntity findByColorAndCottonPart(String color, Integer cottonPart);
-    public List<SockEntity> findByColor(String color);
+    Optional<SockEntity> findByColorAndCottonPartEquals(String color, Integer cottonPart);
+
+    List<SockEntity> findAllByColorAndCottonPartLessThan(String color, Integer cottonPart);
+
+    List<SockEntity> findAllByColorAndCottonPartGreaterThan(String color, Integer cottonPart);
 }
