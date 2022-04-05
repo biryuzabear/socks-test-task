@@ -23,10 +23,16 @@ public class SockController {
     }
 
 
-    @PostMapping
+    @PostMapping("/income")
     public SockEntity income(@RequestBody SockEntity sockEntity) throws BadParamsException {
         if(sockEntity.hasEmptyFields()) throw new BadParamsException("Bad params!");
         return sockService.income(sockEntity);
+    }
+
+    @PostMapping("/outcome")
+    public SockEntity outcome(@RequestBody SockEntity sockEntity) throws BadParamsException {
+        if(sockEntity.hasEmptyFields()) throw new BadParamsException("Bad params!");
+        return sockService.outcome(sockEntity);
     }
 
 }

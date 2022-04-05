@@ -1,6 +1,7 @@
 package com.fedorchenko.socks.controllers;
 
 import com.fedorchenko.socks.exceptions.BadParamsException;
+import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -14,7 +15,7 @@ public class ExceptionsHandler {
     @ExceptionHandler(BadParamsException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     String badParams(BadParamsException ex) {
-        return ex.getMessage();
+        return ExceptionUtils.getStackTrace(ex);
     }
 
 }
